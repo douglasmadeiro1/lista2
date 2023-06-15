@@ -1,18 +1,10 @@
+
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, push, set, onValue } from "firebase/database";
-const firebaseConfig = {
-  apiKey: "AIzaSyATxRE40okbcvn5GXC4CicHRDRrJYpruIQ",
-  authDomain: "listavenda.firebaseapp.com",
-  databaseURL: "https://listavenda-default-rtdb.firebaseio.com",
-  projectId: "listavenda",
-  storageBucket: "listavenda.appspot.com",
-  messagingSenderId: "146426502512",
-  appId: "1:146426502512:web:37c176980cdf71d27b83b5"
-};
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
+
 // Seleção de elementos
 const todoForm = document.querySelector("#todo-form");
 const todoInput = document.querySelector("#todo-input");
@@ -27,21 +19,14 @@ const filterBtn = document.querySelector("#filter-select");
 let oldInputValue;
 
 // Funções
-  const saveTodo = (text, done = 0, save = 1) => {
-  // Crie uma referência para a coleção "tarefas" no banco de dados
+const saveTodoFirebase = (text, done = 0) => {
   const tarefasRef = ref(database, "tarefas");
-
-  // Crie um novo objeto de tarefa com os dados
   const novaTarefa = {
     text: text,
     done: done
   };
-
-  // Adicione a nova tarefa ao banco de dados usando push()
   const novaTarefaRef = push(tarefasRef);
   set(novaTarefaRef, novaTarefa);
-
-  // Restante do código...
 };
 
   const todoTitle = document.createElement("h3");
@@ -257,32 +242,69 @@ const saveTodoLocalStorage = (todo) => {
   localStorage.setItem("todos", JSON.stringify(todos));
 };
 
-const removeTodoLocalStorage = (todoText) => {
-  const todos = getTodosLocalStorage();
+const removeTodoFirebase = (todoText) => {
+  const tarefasRef = ref(database, "tarefas");
+  const todos = getTodosFirebase();
 
-  const filteredTodos = todos.filter((todo) => todo.text != todoText);
-
-  localStorage.setItem("todos", JSON.stringify(filteredTodos));
+  todos.forEach((todo) => {
+    if (todo.text === todoText) {
+      for (const key in tarefasRef) {
+        if (tarefasRef[key].text === todoText) {
+          set(ref(database, `tarefas/${key}`), null);
+          break;
+        }
+      }
+    }
+  });
 };
 
-const updateTodoStatusLocalStorage = (todoText) => {
-  const todos = getTodosLocalStorage();
+const updateTodoStatusFirebase = (todoText) => {
+  const tarefasRef = ref(database, "tarefas");
+  const todos = getTodosFirebase();
 
-  todos.map((todo) =>
-    todo.text === todoText ? (todo.done = !todo.done) : null
-  );
-
-  localStorage.setItem("todos", JSON.stringify(todos));
+  todos.forEach((todo) => {
+    if (todo.text === todoText) {
+      for (const key in tarefasRef) {
+        if (tarefasRef[key].text === todoText) {
+          set(ref(database, `tarefas/${key}/done`), !todo.done);
+          break;
+        }
+      }
+    }
+  });
 };
 
-const updateTodoLocalStorage = (todoOldText, todoNewText) => {
-  const todos = getTodosLocalStorage();
+const updateTodoFirebase = (todoOldText, todoNewText) => {
+  const tarefasRef = ref(database, "tarefas");
+  const todos = getTodosFirebase();
 
-  todos.map((todo) =>
-    todo.text === todoOldText ? (todo.text = todoNewText) : null
-  );
-
-  localStorage.setItem("todos", JSON.stringify(todos));
+  todos.forEach((todo) => {
+    if (todo.text === todoOldText) {
+      for (const key in tarefasRef) {
+        if (tarefasRef[key].text === todoOldText) {
+          set(ref(database, `tarefas/${key}/text`), todoNewText);
+          break;
+        }
+      }
+    }
+  });
 };
 
+const getTodosFirebase = () => {
+  const tarefasRef = ref(database, "tarefas");
+  const todos = [];
+
+  onValue(tarefasRef, (snapshot) => {
+    const tarefas = snapshot.val();
+
+    for (const key in tarefas) {
+      todos.push({
+        text: tarefas[key].text,
+        done: tarefas[key].done
+      });
+    }
+  });
+
+  return todos;
+};
 loadTodos();
