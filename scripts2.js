@@ -47,26 +47,28 @@ const firebaseConfig = {
   };
 
   const getTodosFirebase = () => {
-    const todosCollection = firestore.collection("todos");
-    const todosQuery = todosCollection.orderBy("done", "asc");
+  const todosCollection = firestore.collection("todos");
 
-    todosQuery.onSnapshot((snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        const todo = {
-          id: change.doc.id,
-          ...change.doc.data()
-        };
+  todosCollection.onSnapshot((snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      const todo = {
+        id: change.doc.id,
+        ...change.doc.data()
+      };
 
-        if (change.type === "added") {
+      if (change.type === "added") {
+        // Verificar se a tarefa já existe antes de adicioná-la
+        if (!document.getElementById(todo.id)) {
           saveTodo(todo.text, todo.done, false);
-        } else if (change.type === "removed") {
-          removeTodoElement(todo.id);
-        } else if (change.type === "modified") {
-          updateTodoElement(todo.id, todo.text, todo.done);
         }
-      });
+      } else if (change.type === "removed") {
+        removeTodoElement(todo.id, false);
+      } else if (change.type === "modified") {
+        updateTodoElement(todo.id, todo.text, todo.done, false);
+      }
     });
-  };
+  });
+};
 
   const todoForm = document.getElementById("todo-form");
   const todoInput = document.getElementById("todo-input");
@@ -163,12 +165,12 @@ const firebaseConfig = {
   };
 
   todoForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const text = todoInput.value.trim();
-    if (text !== "") {
-      saveTodo(text);
-      todoForm.reset();
-    }
-  });
+  e.preventDefault();
+  const text = todoInput.value.trim();
+  if (text !== "") {
+    saveTodo(text);
+    todoForm.reset();
+  }
+});
 
   getTodosFirebase();
