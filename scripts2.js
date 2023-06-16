@@ -181,4 +181,15 @@ todoForm.addEventListener("submit", (e) => {
   }
 });
 
+const submitButton = document.getElementById("submit-btn");
+
+submitButton.addEventListener("click", () => {
+  const text = todoInput.value.trim();
+  if (text !== "") {
+    saveTodoElement(null, text, false);
+    saveTodoFirebase(text);
+    todoForm.reset();
+  }
+});
+
 getTodosFirebase();
