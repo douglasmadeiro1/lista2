@@ -10,43 +10,43 @@ const firebaseConfig = {
 
   // Inicializar o Firebase
   firebase.initializeApp(firebaseConfig);
-  const firestore = firebase.firestore();
+const firestore = firebase.firestore();
 
-  const saveTodoFirebase = async (text, done = false) => {
-    const todosCollection = firestore.collection("todos");
-    const newTodo = { text, done };
+const saveTodoFirebase = async (text, done = false) => {
+  const todosCollection = firestore.collection("todos");
+  const newTodo = { text, done };
 
-    try {
-      await todosCollection.add(newTodo);
-      console.log("Tarefa salva com sucesso!");
-    } catch (error) {
-      console.error("Erro ao salvar a tarefa:", error);
-    }
-  };
+  try {
+    await todosCollection.add(newTodo);
+    console.log("Tarefa salva com sucesso!");
+  } catch (error) {
+    console.error("Erro ao salvar a tarefa:", error);
+  }
+};
 
-  const deleteTodoFirebase = async (id) => {
-    const todoDoc = firestore.collection("todos").doc(id);
+const deleteTodoFirebase = async (id) => {
+  const todoDoc = firestore.collection("todos").doc(id);
 
-    try {
-      await todoDoc.delete();
-      console.log("Tarefa excluída com sucesso!");
-    } catch (error) {
-      console.error("Erro ao excluir a tarefa:", error);
-    }
-  };
+  try {
+    await todoDoc.delete();
+    console.log("Tarefa excluída com sucesso!");
+  } catch (error) {
+    console.error("Erro ao excluir a tarefa:", error);
+  }
+};
 
-  const updateTodoFirebase = async (id, text, done) => {
-    const todoDoc = firestore.collection("todos").doc(id);
+const updateTodoFirebase = async (id, text, done) => {
+  const todoDoc = firestore.collection("todos").doc(id);
 
-    try {
-      await todoDoc.update({ text, done });
-      console.log("Tarefa atualizada com sucesso!");
-    } catch (error) {
-      console.error("Erro ao atualizar a tarefa:", error);
-    }
-  };
+  try {
+    await todoDoc.update({ text, done });
+    console.log("Tarefa atualizada com sucesso!");
+  } catch (error) {
+    console.error("Erro ao atualizar a tarefa:", error);
+  }
+};
 
-  const getTodosFirebase = () => {
+const getTodosFirebase = () => {
   const todosCollection = firestore.collection("todos");
 
   todosCollection.onSnapshot((snapshot) => {
@@ -94,88 +94,91 @@ const removeTodoElement = (todoId, removeFromFirebase = true) => {
   }
 };
 
-  const updateTodoElement = (id, text, done) => {
-    const todoElement = document.getElementById(id);
-    const todoTextElement = todoElement.querySelector(".todo-text");
-    const todoCheckbox = todoElement.querySelector(".todo-checkbox");
+const updateTodoElement = (id, text, done) => {
+  const todoElement = document.getElementById(id);
+  const todoTextElement = todoElement.querySelector(".todo-text");
+  const todoCheckbox = todoElement.querySelector(".todo-checkbox");
 
-    todoTextElement.textContent = text;
-    todoCheckbox.checked = done;
-  };
+  todoTextElement.textContent = text;
+  todoCheckbox.checked = done;
+};
 
-  const createTodoElement = (text, done) => {
-    const todoElement = document.createElement("div");
-    todoElement.classList.add("todo");
-    todoElement.id = Date.now().toString();
+const createTodoElement = (id, text, done) => {
+  const todoElement = document.createElement("div");
+  todoElement.classList.add("todo");
+  todoElement.id = id;
 
-    const todoTextElement = document.createElement("h3");
-    todoTextElement.classList.add("todo-text");
-    todoTextElement.textContent = text;
+  const todoTextElement = document.createElement("h3");
+  todoTextElement.classList.add("todo-text");
+  todoTextElement.textContent = text;
 
-    const todoCheckbox = document.createElement("input");
-    todoCheckbox.classList.add("todo-checkbox");
-    todoCheckbox.type = "checkbox";
-    todoCheckbox.checked = done;
-    todoCheckbox.addEventListener("change", () => {
-      updateTodoFirebase(todoElement.id, text, todoCheckbox.checked);
-    });
+  const todoCheckbox = document.createElement("input");
+  todoCheckbox.classList.add("todo-checkbox");
+  todoCheckbox.type = "checkbox";
+  todoCheckbox.checked = done;
+  todoCheckbox.addEventListener("change", () => {
+    updateTodoFirebase(id, text, todoCheckbox.checked);
+  });
 
-    const editButton = document.createElement("button");
-    editButton.classList.add("edit-todo");
-    editButton.innerHTML = `<i class="fa-solid fa-pencil"></i>`;
-    editButton.addEventListener("click", () => {
-      editTodoElement(todoElement.id, text);
-    });
+  const editButton = document.createElement("button");
+  editButton.classList.add("edit-todo");
+  editButton.innerHTML = `<i class="fa-solid fa-pencil"></i>`;
+  editButton.addEventListener("click", () => {
+    editTodoElement(id, text);
+  });
 
-    const deleteButton = document.createElement("button");
-    deleteButton.classList.add("delete-todo");
-    deleteButton.innerHTML = `<i class="fa-solid fa-trash"></i>`;
-    deleteButton.addEventListener("click", () => {
-      removeTodoElement(todoElement.id);
-    });
+  const deleteButton = document.createElement("button");
+  deleteButton.classList.add("delete-todo");
+  deleteButton.innerHTML = `<i class="fa-solid fa-trash"></i>`;
+  deleteButton.addEventListener("click", () => {
+    removeTodoElement(id);
+  });
 
-    todoElement.appendChild(todoTextElement);
-    todoElement.appendChild(todoCheckbox);
-    todoElement.appendChild(editButton);
-    todoElement.appendChild(deleteButton);
+  todoElement.appendChild(todoTextElement);
+  todoElement.appendChild(todoCheckbox);
+  todoElement.appendChild(editButton);
+  todoElement.appendChild(deleteButton);
 
-    return todoElement;
-  };
+  return todoElement;
+};
 
-  const editForm = document.getElementById("edit-form");
-  const editInput = document.getElementById("edit-input");
-  const cancelEditButton = document.getElementById("cancel-edit-btn");
+const editForm = document.getElementById("edit-form");
+const editInput = document.getElementById("edit-input");
+const cancelEditButton = document.getElementById("cancel-edit-btn");
 
-  const editTodoElement = (id, text) => {
-    editForm.classList.remove("hide");
-    editInput.value = text;
-    editInput.focus();
+const editTodoElement = (id, text) => {
+  editForm.classList.remove("hide");
+  editInput.value = text;
+  editInput.focus();
 
-    editForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const newText = editInput.value.trim();
-      if (newText !== "") {
-        updateTodoElement(id, newText, false);
-        updateTodoFirebase(id, newText, false);
-        editForm.reset();
-        editForm.classList.add("hide");
-      }
-    });
-
-    cancelEditButton.addEventListener("click", () => {
+  editForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const newText = editInput.value.trim();
+    if (newText !== "") {
+      updateTodoElement(id, newText, false);
+      updateTodoFirebase(id, newText, false);
       editForm.reset();
       editForm.classList.add("hide");
-    });
-  };
+    }
+  });
 
-  todoForm.addEventListener("submit", (e) => {
+  cancelEditButton.addEventListener("click", () => {
+    editForm.reset();
+    editForm.classList.add("hide");
+  });
+};
+
+const todoForm = document.getElementById("todo-form");
+const todoInput = document.getElementById("todo-input");
+
+todoForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const text = todoInput.value.trim();
   if (text !== "") {
     saveTodoElement(null, text, false);
-    saveTodo(text);
+    saveTodoFirebase(text);
     todoForm.reset();
   }
 });
 
-  getTodosFirebase();
+getTodosFirebase();
