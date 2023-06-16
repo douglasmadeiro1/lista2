@@ -1,12 +1,12 @@
 const firebaseConfig = {
-    apiKey: "SUA_API_KEY",
-    authDomain: "SEU_DOMINIO.firebaseapp.com",
-    projectId: "SEU_PROJETO_ID",
-    storageBucket: "SEU_BUCKET.appspot.com",
-    messagingSenderId: "SEU_SENDER_ID",
-    appId: "SEU_APP_ID",
-    measurementId: "SEU_MEASUREMENT_ID"
-  };
+  apiKey: "AIzaSyATxRE40okbcvn5GXC4CicHRDRrJYpruIQ",
+  authDomain: "listavenda.firebaseapp.com",
+  databaseURL: "https://listavenda-default-rtdb.firebaseio.com",
+  projectId: "listavenda",
+  storageBucket: "listavenda.appspot.com",
+  messagingSenderId: "146426502512",
+  appId: "1:146426502512:web:151cff147d7718647b83b5"
+};
 
   // Inicializar o Firebase
   firebase.initializeApp(firebaseConfig);
