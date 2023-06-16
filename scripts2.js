@@ -46,76 +46,27 @@ const firebaseConfig = {
     }
   };
 
+  const getTodosFirebase = () => {
+    const todosCollection = firestore.collection("todos");
+    const todosQuery = todosCollection.orderBy("done", "asc");
 
-    // Configurações do Firebase
-    const firebaseConfig = {
-      apiKey: "SUA_API_KEY",
-      authDomain: "SEU_DOMINIO.firebaseapp.com",
-      projectId: "SEU_PROJETO_ID",
-      storageBucket: "SEU_BUCKET.appspot.com",
-      messagingSenderId: "SEU_SENDER_ID",
-      appId: "SEU_APP_ID",
-      measurementId: "SEU_MEASUREMENT_ID"
-    };
+    todosQuery.onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        const todo = {
+          id: change.doc.id,
+          ...change.doc.data()
+        };
 
-    // Inicializar o Firebase
-    firebase.initializeApp(firebaseConfig);
-    const firestore = firebase.firestore();
-
-    const saveTodoFirebase = async (text, done = false) => {
-      const todosCollection = firestore.collection("todos");
-      const newTodo = { text, done };
-
-      try {
-        await todosCollection.add(newTodo);
-        console.log("Tarefa salva com sucesso!");
-      } catch (error) {
-        console.error("Erro ao salvar a tarefa:", error);
-      }
-    };
-
-    const deleteTodoFirebase = async (id) => {
-      const todoDoc = firestore.collection("todos").doc(id);
-
-      try {
-        await todoDoc.delete();
-        console.log("Tarefa excluída com sucesso!");
-      } catch (error) {
-        console.error("Erro ao excluir a tarefa:", error);
-      }
-    };
-
-    const updateTodoFirebase = async (id, text, done) => {
-      const todoDoc = firestore.collection("todos").doc(id);
-
-      try {
-        await todoDoc.update({ text, done });
-        console.log("Tarefa atualizada com sucesso!");
-      } catch (error) {
-        console.error("Erro ao atualizar a tarefa:", error);
-      }
-    };
-
-    const getTodosFirebase = () => {
-      const todosCollection = firestore.collection("todos");
-
-      todosCollection.onSnapshot((snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          const todo = {
-            id: change.doc.id,
-            ...change.doc.data()
-          };
-
-          if (change.type === "added") {
-            saveTodo(todo.text, todo.done, false);
-          } else if (change.type === "removed") {
-            removeTodoElement(todo.id, false);
-          } else if (change.type === "modified") {
-            updateTodoElement(todo.id, todo.text, todo.done, false);
-          }
-        });
+        if (change.type === "added") {
+          saveTodo(todo.text, todo.done, false);
+        } else if (change.type === "removed") {
+          removeTodoElement(todo.id);
+        } else if (change.type === "modified") {
+          updateTodoElement(todo.id, todo.text, todo.done);
+        }
       });
-    };
+    });
+  };
 
   const todoForm = document.getElementById("todo-form");
   const todoInput = document.getElementById("todo-input");
