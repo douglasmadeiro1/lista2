@@ -69,18 +69,18 @@
         <!--
           Template
 
-          <div class="todo">
-          <h3>Estou fazendo algo aqui...</h3>
+          <div class="todo" id="${todo.id}">
+          <h3 class="todo-text">${todo.text}</h3>
           <button class="finish-todo">
-            <i class="fa-solid fa-check"></i>
+          <i class="fa-solid fa-check"></i>
           </button>
           <button class="edit-todo">
-            <i class="fa-solid fa-pen"></i>
+           <i class="fa-solid fa-pencil"></i>
           </button>
           <button class="remove-todo" onclick="deleteTodo('${todo.id}')">
-            <i class="fa-solid fa-xmark"></i>
-<         /button>
-        </div> -->
+          <i class="fa-solid fa-trash"></i>
+          </button>
+          </div> -->
       </div>
     </div>
     <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
