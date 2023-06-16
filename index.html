@@ -69,18 +69,18 @@
         <!--
           Template
 
-          <div class="todo" id="${todo.id}">
-          <h3 class="todo-text">${todo.text}</h3>
+          <div class="todo">
+          <h3>Estou fazendo algo aqui...</h3>
           <button class="finish-todo">
-          <i class="fa-solid fa-check"></i>
+            <i class="fa-solid fa-check"></i>
           </button>
           <button class="edit-todo">
-           <i class="fa-solid fa-pencil"></i>
+            <i class="fa-solid fa-pen"></i>
           </button>
-          <button class="remove-todo" onclick="deleteTodo('${todo.id}')">
-          <i class="fa-solid fa-trash"></i>
+          <button class="remove-todo">
+            <i class="fa-solid fa-xmark"></i>
           </button>
-          </div> -->
+        </div> -->
       </div>
     </div>
     <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
@@ -251,11 +251,6 @@
     });
   };
 
-  function deleteTodo(id) {
-  removeTodoElement(id);
-  deleteTodoFirebase(id);
-}
-
   todoForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const text = todoInput.value.trim();
@@ -264,7 +259,6 @@
       todoForm.reset();
     }
   });
-
 
   getTodosFirebase();
   </script>
