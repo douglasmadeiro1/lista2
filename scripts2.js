@@ -25,15 +25,15 @@ const firebaseConfig = {
   };
 
   const deleteTodoFirebase = async (id) => {
-    const todoDoc = firestore.collection("todos").doc(id);
+  const todoDoc = firestore.collection("todos").doc(id);
 
-    try {
-      await todoDoc.delete();
-      console.log("Tarefa excluída com sucesso!");
-    } catch (error) {
-      console.error("Erro ao excluir a tarefa:", error);
-    }
-  };
+  try {
+    await todoDoc.delete();
+    console.log("Tarefa excluída com sucesso!");
+  } catch (error) {
+    console.error("Erro ao excluir a tarefa:", error);
+  }
+};
 
   const updateTodoFirebase = async (id, text, done) => {
     const todoDoc = firestore.collection("todos").doc(id);
