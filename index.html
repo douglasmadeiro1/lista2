@@ -77,9 +77,9 @@
           <button class="edit-todo">
             <i class="fa-solid fa-pen"></i>
           </button>
-          <button class="remove-todo">
+          <button class="remove-todo" onclick="deleteTodo('${todo.id}')">
             <i class="fa-solid fa-xmark"></i>
-          </button>
+<         /button>
         </div> -->
       </div>
     </div>
@@ -251,6 +251,11 @@
     });
   };
 
+  function deleteTodo(id) {
+  removeTodoElement(id);
+  deleteTodoFirebase(id);
+}
+
   todoForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const text = todoInput.value.trim();
@@ -259,6 +264,7 @@
       todoForm.reset();
     }
   });
+
 
   getTodosFirebase();
   </script>
