@@ -59,7 +59,7 @@ const firebaseConfig = {
       if (change.type === "added") {
         // Verificar se a tarefa já existe antes de adicioná-la
         if (!document.getElementById(todo.id)) {
-          saveTodo(todo.text, todo.done, false);
+          saveTodoElement(todo.id, todo.text, todo.done, false);
         }
       } else if (change.type === "removed") {
         removeTodoElement(todo.id, false);
@@ -70,25 +70,29 @@ const firebaseConfig = {
   });
 };
 
-  const todoForm = document.getElementById("todo-form");
-  const todoInput = document.getElementById("todo-input");
-  const todoList = document.getElementById("todo-list");
+const saveTodo = (text, done = false, saveToFirebase = true) => {
+  const todosCollection = firestore.collection("todos");
 
-  const saveTodo = (text, done = false, saveToFirebase = true) => {
-    const todoElement = createTodoElement(text, done);
-    todoList.appendChild(todoElement);
-    if (saveToFirebase) {
-      saveTodoFirebase(text, done);
-    }
-  };
+  if (saveToFirebase) {
+    todosCollection.add({
+      text: text,
+      done: done
+    });
+  }
+};
 
-  const removeTodoElement = (id, deleteFromFirebase = true) => {
-    const todoElement = document.getElementById(id);
-    todoList.removeChild(todoElement);
-    if (deleteFromFirebase) {
-      deleteTodoFirebase(id);
-    }
-  };
+const removeTodoElement = (todoId, removeFromFirebase = true) => {
+  const todoElement = document.getElementById(todoId);
+
+  if (removeFromFirebase) {
+    const todoRef = firestore.collection("todos").doc(todoId);
+    todoRef.delete();
+  }
+
+  if (todoElement) {
+    todoElement.remove();
+  }
+};
 
   const updateTodoElement = (id, text, done) => {
     const todoElement = document.getElementById(id);
@@ -168,6 +172,7 @@ const firebaseConfig = {
   e.preventDefault();
   const text = todoInput.value.trim();
   if (text !== "") {
+    saveTodoElement(null, text, false);
     saveTodo(text);
     todoForm.reset();
   }
