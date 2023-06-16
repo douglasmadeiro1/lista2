@@ -122,7 +122,7 @@ const firebaseConfig = {
     });
 
     const deleteButton = document.createElement("button");
-    deleteButton.classList.add("remove-todo");
+    deleteButton.classList.add("delete-todo");
     deleteButton.innerHTML = `<i class="fa-solid fa-trash"></i>`;
     deleteButton.addEventListener("click", () => {
       removeTodoElement(todoElement.id);
