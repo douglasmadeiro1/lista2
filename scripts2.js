@@ -9,166 +9,96 @@ const firebaseConfig = {
 };
 
   // Inicializar o Firebase
-  firebase.initializeApp(firebaseConfig);
-  const firestore = firebase.firestore();
+    firebase.initializeApp(firebaseConfig);
 
-  const saveTodoFirebase = async (text, done = false) => {
-    const todosCollection = firestore.collection("todos");
-    const newTodo = { text, done };
+    // Referenciar a coleção 'tasks' no Firestore
+    const db = firebase.firestore();
+    const tasksRef = db.collection('tasks');
 
-    try {
-      await todosCollection.add(newTodo);
-      console.log("Tarefa salva com sucesso!");
-    } catch (error) {
-      console.error("Erro ao salvar a tarefa:", error);
-    }
-  };
+    // Função para adicionar uma nova tarefa
+    function addTask() {
+        const taskInput = document.getElementById('taskInput');
+        const task = taskInput.value.trim();
 
-  const deleteTodoFirebase = async (id) => {
-    const todoDoc = firestore.collection("todos").doc(id);
-
-    try {
-      await todoDoc.delete();
-      console.log("Tarefa excluída com sucesso!");
-    } catch (error) {
-      console.error("Erro ao excluir a tarefa:", error);
-    }
-  };
-
-  const updateTodoFirebase = async (id, text, done) => {
-    const todoDoc = firestore.collection("todos").doc(id);
-
-    try {
-      await todoDoc.update({ text, done });
-      console.log("Tarefa atualizada com sucesso!");
-    } catch (error) {
-      console.error("Erro ao atualizar a tarefa:", error);
-    }
-  };
-
-  const getTodosFirebase = () => {
-    const todosCollection = firestore.collection("todos");
-    const todosQuery = todosCollection.orderBy("done", "asc");
-
-    todosQuery.onSnapshot((snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        const todo = {
-          id: change.doc.id,
-          ...change.doc.data()
-        };
-
-        if (change.type === "added") {
-          saveTodo(todo.text, todo.done, false);
-        } else if (change.type === "removed") {
-          removeTodoElement(todo.id);
-        } else if (change.type === "modified") {
-          updateTodoElement(todo.id, todo.text, todo.done);
+        if (task !== '') {
+          // Salvar a tarefa no Firestore
+          tasksRef.add({ description: task })
+            .then(() => {
+              taskInput.value = '';
+              renderTasks(); // Atualiza a lista de tarefas na tela
+            })
+            .catch(error => {
+              console.error('Erro ao adicionar a tarefa:', error);
+            });
         }
-      });
-    });
-  };
-
-  const todoForm = document.getElementById("todo-form");
-  const todoInput = document.getElementById("todo-input");
-  const todoList = document.getElementById("todo-list");
-
-  const saveTodo = (text, done = false, saveToFirebase = true) => {
-    const todoElement = createTodoElement(text, done);
-    todoList.appendChild(todoElement);
-    if (saveToFirebase) {
-      saveTodoFirebase(text, done);
     }
-  };
 
-  const removeTodoElement = (id, deleteFromFirebase = true) => {
-    const todoElement = document.getElementById(id);
-    todoList.removeChild(todoElement);
-    if (deleteFromFirebase) {
-      deleteTodoFirebase(id);
+    // Função para excluir uma tarefa
+    function deleteTask(id) {
+      // Excluir a tarefa do Firestore
+      tasksRef.doc(id).delete()
+      .then(() => {
+            renderTasks(); // Atualiza a lista de tarefas na tela
+          })
+        .catch(error => {
+          console.error('Erro ao excluir a tarefa:', error);
+        });
     }
-  };
 
-  const updateTodoElement = (id, text, done) => {
-    const todoElement = document.getElementById(id);
-    const todoTextElement = todoElement.querySelector(".todo-text");
-    const todoCheckbox = todoElement.querySelector(".todo-checkbox");
+    // Função para renderizar as tarefas na página
+    function renderTasks() {
+      const taskList = document.getElementById('taskList');
+      taskList.innerHTML = '';
 
-    todoTextElement.textContent = text;
-    todoCheckbox.checked = done;
-  };
+      // Obter as tarefas do Firestore
+      tasksRef.get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            const task = doc.data();
+            const id = doc.id;
 
-  const createTodoElement = (text, done) => {
-    const todoElement = document.createElement("div");
-    todoElement.classList.add("todo");
-    todoElement.id = Date.now().toString();
+            const todoItem = document.createElement('div');
+            todoItem.className = 'todo-item';
 
-    const todoTextElement = document.createElement("h3");
-    todoTextElement.classList.add("todo-text");
-    todoTextElement.textContent = text;
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.addEventListener('change', () => {
+              toggleTaskCompleted(id);
+            });
 
-    const todoCheckbox = document.createElement("input");
-    todoCheckbox.classList.add("todo-checkbox");
-    todoCheckbox.type = "checkbox";
-    todoCheckbox.checked = done;
-    todoCheckbox.addEventListener("change", () => {
-      updateTodoFirebase(todoElement.id, text, todoCheckbox.checked);
-    });
+            const taskText = document.createElement('span');
+            taskText.textContent = task.description;
 
-    const editButton = document.createElement("button");
-    editButton.classList.add("edit-todo");
-    editButton.innerHTML = `<i class="fa-solid fa-pencil"></i>`;
-    editButton.addEventListener("click", () => {
-      editTodoElement(todoElement.id, text);
-    });
+            const deleteButton = document.createElement('button');
+            deleteButton.innerHTML = `<i class="fa-solid fa-trash"></i>`;
+            deleteButton.addEventListener('click', () => {
+              deleteTask(id);
+            });
 
-    const deleteButton = document.createElement("button");
-    deleteButton.classList.add("delete-todo");
-    deleteButton.innerHTML = `<i class="fa-solid fa-trash"></i>`;
-    deleteButton.addEventListener("click", () => {
-      removeTodoElement(todoElement.id);
-    });
+            const editButton = document.createElement("button");
+            editButton.innerHTML = `<i class="fa-solid fa-pencil"></i>`;
+            editButton.addEventListener("click", () => {
+            editButton(todoElement.id, text);
+            });
 
-    todoElement.appendChild(todoTextElement);
-    todoElement.appendChild(todoCheckbox);
-    todoElement.appendChild(editButton);
-    todoElement.appendChild(deleteButton);
+            todoItem.appendChild(checkbox);
+            todoItem.appendChild(taskText);
+            todoItem.appendChild(deleteButton);
+            todoItem.appendChild(editButton);
 
-    return todoElement;
-  };
-
-  const editForm = document.getElementById("edit-form");
-  const editInput = document.getElementById("edit-input");
-  const cancelEditButton = document.getElementById("cancel-edit-btn");
-
-  const editTodoElement = (id, text) => {
-    editForm.classList.remove("hide");
-    editInput.value = text;
-    editInput.focus();
-
-    editForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const newText = editInput.value.trim();
-      if (newText !== "") {
-        updateTodoElement(id, newText, false);
-        updateTodoFirebase(id, newText, false);
-        editForm.reset();
-        editForm.classList.add("hide");
-      }
-    });
-
-    cancelEditButton.addEventListener("click", () => {
-      editForm.reset();
-      editForm.classList.add("hide");
-    });
-  };
-
-  todoForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const text = todoInput.value.trim();
-    if (text !== "") {
-      saveTodo(text);
-      todoForm.reset();
+            taskList.appendChild(todoItem);
+          });
+        })
+        .catch(error => {
+          console.error('Erro ao obter as tarefas:', error);
+        });
     }
-  });
 
-  getTodosFirebase();
+    // Função para marcar ou desmarcar uma tarefa como concluída
+    function toggleTaskCompleted(id) {
+      // Adicione aqui a lógica para marcar ou desmarcar a tarefa como concluída no Firestore
+      // Exemplo: tasksRef.doc(id).update({ completed: newValue });
+    }
+
+    // Renderizar as tarefas ao carregar a página
+    renderTasks();
