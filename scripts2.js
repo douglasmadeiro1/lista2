@@ -93,7 +93,7 @@ const firebaseConfig = {
             const editButton = document.createElement("button");
               editButton.innerHTML = `<i class="fa-solid fa-pencil"></i>`;
               editButton.addEventListener("click", () => {
-                const newDescription = prompt('Digite a nova descrição da tarefa:');
+                const newDescription = prompt('Editar lançamento:');
                 if (newDescription !== null && newDescription.trim() !== '') {
                   editTask(id, newDescription.trim());
                 }
