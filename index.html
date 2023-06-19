@@ -114,15 +114,20 @@
   };
 
   const deleteTodoFirebase = async (id) => {
-    const todoDoc = firestore.collection("todos").doc(id);
+  const todoDoc = firestore.collection("todos").doc(id);
 
-    try {
+  try {
+    const doc = await todoDoc.get();
+    if (doc.exists) {
       await todoDoc.delete();
       console.log("Tarefa excluída com sucesso!");
-    } catch (error) {
-      console.error("Erro ao excluir a tarefa:", error);
+    } else {
+      console.log("O documento não existe.");
     }
-  };
+  } catch (error) {
+    console.error("Erro ao excluir a tarefa:", error);
+  }
+};
 
   const updateTodoFirebase = async (id, text, done) => {
     const todoDoc = firestore.collection("todos").doc(id);
@@ -170,12 +175,13 @@
   };
 
   const removeTodoElement = (id, deleteFromFirebase = true) => {
-    const todoElement = document.getElementById(id);
-    todoList.removeChild(todoElement);
-    if (deleteFromFirebase) {
-      deleteTodoFirebase(id);
-    }
-  };
+  if (deleteFromFirebase) {
+    deleteTodoFirebase(id);
+  }
+
+  const todoElement = document.getElementById(id);
+  todoList.removeChild(todoElement);
+};
 
   const updateTodoElement = (id, text, done) => {
     const todoElement = document.getElementById(id);
