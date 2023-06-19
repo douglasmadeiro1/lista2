@@ -72,10 +72,11 @@ const firebaseConfig = {
             todoItem.className = 'todo-item';
 
             const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.addEventListener('change', () => {
-              toggleTaskCompleted(id);
-            });
+              checkbox.type = 'checkbox';
+              checkbox.checked = task.completed; // Define o estado da checkbox
+              checkbox.addEventListener('change', () => {
+                toggleTaskCompleted(id, task.completed);
+              });
 
             const taskText = document.createElement('span');
             taskText.textContent = task.description;
@@ -109,10 +110,16 @@ const firebaseConfig = {
     }
 
     // Função para marcar ou desmarcar uma tarefa como concluída
-    function toggleTaskCompleted(id) {
-      // Adicione aqui a lógica para marcar ou desmarcar a tarefa como concluída no Firestore
-      // Exemplo: tasksRef.doc(id).update({ completed: newValue });
-    }
+    function toggleTaskCompleted(id, completed) {
+        // Atualizar a propriedade 'completed' da tarefa no Firestore
+        tasksRef.doc(id).update({ completed: !completed })
+          .then(() => {
+            renderTasks(); // Atualiza a lista de tarefas na tela
+          })
+          .catch(error => {
+            console.error('Erro ao atualizar a tarefa:', error);
+          });
+      }
 
     // Renderizar as tarefas ao carregar a página
     renderTasks();
