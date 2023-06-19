@@ -59,7 +59,8 @@ select {
       }
 
       .todo-item {
-         display: grid;
+
+        display: grid;
         /* aqui eu determino é são 3 colunas de tamanhos iguas, cada coluna tem uma fração */
         grid-template-columns: repeat(4, 1fr);
         /* esssa é a altura das linhas, se vc quiser pode apaga-la caso não queira uma altura definida */
@@ -67,7 +68,7 @@ select {
         /* espaço entre um elemento interno e outro */
         grid-gap: 10px 10px;
         /* margem interna que afasta os elementos da borda do grid */
-        padding: 30px 10px;
+        padding: 50px 10px;
         border-bottom: 2px solid #696969;
         border-top: 2px solid #696969;
          }
