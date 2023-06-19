@@ -45,6 +45,17 @@ const firebaseConfig = {
         });
     }
 
+    function editTask(id, newDescription) {
+        // Atualizar a descrição da tarefa no Firestore
+        tasksRef.doc(id).update({ description: newDescription })
+          .then(() => {
+            renderTasks(); // Atualiza a lista de tarefas na tela
+          })
+          .catch(error => {
+            console.error('Erro ao editar a tarefa:', error);
+          });
+      }
+
     // Função para renderizar as tarefas na página
     function renderTasks() {
       const taskList = document.getElementById('taskList');
@@ -76,10 +87,13 @@ const firebaseConfig = {
             });
 
             const editButton = document.createElement("button");
-            editButton.innerHTML = `<i class="fa-solid fa-pencil"></i>`;
-            editButton.addEventListener("click", () => {
-            editButton(todoElement.id, text);
-            });
+              editButton.innerHTML = `<i class="fa-solid fa-pencil"></i>`;
+              editButton.addEventListener("click", () => {
+                const newDescription = prompt('Digite a nova descrição da tarefa:');
+                if (newDescription !== null && newDescription.trim() !== '') {
+                  editTask(id, newDescription.trim());
+                }
+              });
 
             todoItem.appendChild(checkbox);
             todoItem.appendChild(taskText);
