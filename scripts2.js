@@ -35,15 +35,20 @@ const firebaseConfig = {
 
     // Função para excluir uma tarefa
     function deleteTask(id) {
-      // Excluir a tarefa do Firestore
-      tasksRef.doc(id).delete()
+  // Pedir confirmação antes de excluir a tarefa
+  const confirmed = confirm("Tem certeza de que deseja excluir esta tarefa?");
+  if (confirmed) {
+    // Excluir a tarefa do Firestore
+    tasksRef.doc(id)
+      .delete()
       .then(() => {
-            renderTasks(); // Atualiza a lista de tarefas na tela
-          })
-        .catch(error => {
-          console.error('Erro ao excluir a tarefa:', error);
-        });
-    }
+        renderTasks(); // Atualiza a lista de tarefas na tela
+      })
+      .catch(error => {
+        console.error('Erro ao excluir a tarefa:', error);
+      });
+  }
+}
 
     function editTask(id, newDescription) {
         // Atualizar a descrição da tarefa no Firestore
