@@ -36,7 +36,7 @@ const firebaseConfig = {
     // Função para excluir uma tarefa
     function deleteTask(id) {
   // Pedir confirmação antes de excluir a tarefa
-  const confirmed = confirm("Tem certeza de que deseja excluir esta tarefa?");
+  const confirmed = confirm("Deseja realmente excluir esse lançamento?");
   if (confirmed) {
     // Excluir a tarefa do Firestore
     tasksRef.doc(id)
