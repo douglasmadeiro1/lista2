@@ -185,6 +185,10 @@ select {
   font-size: 0.9rem;
 }
 
+.completed {
+      background-color: lightgray;
+    }
+
 .todo button {
   margin-left: 0.4rem;
 }

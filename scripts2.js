@@ -70,6 +70,9 @@ const firebaseConfig = {
 
             const todoItem = document.createElement('div');
             todoItem.className = 'todo-item';
+            if (task.completed) {
+                todoItem.classList.add('completed');
+              }
 
             const checkbox = document.createElement('input');
               checkbox.type = 'checkbox';
