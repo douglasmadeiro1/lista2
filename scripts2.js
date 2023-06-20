@@ -16,22 +16,31 @@ const firebaseConfig = {
     const tasksRef = db.collection('tasks');
 
     // Função para adicionar uma nova tarefa
-    function addTask() {
-        const taskInput = document.getElementById('taskInput');
-        const task = taskInput.value.trim();
+    document.getElementById("taskForm").addEventListener("submit", function(event) {
+  event.preventDefault(); // Impede o comportamento padrão de atualização da página
+  addTask();
+});
 
-        if (task !== '') {
-          // Salvar a tarefa no Firestore
-          tasksRef.add({ description: task })
-            .then(() => {
-              taskInput.value = '';
-              renderTasks(); // Atualiza a lista de tarefas na tela
-            })
-            .catch(error => {
-              console.error('Erro ao adicionar a tarefa:', error);
-            });
-        }
-    }
+function addTask() {
+  const taskInput = document.getElementById('taskInput');
+  const valueInput = document.getElementById('valueInput');
+
+  const task = taskInput.value.trim();
+  const value = valueInput.value.trim();
+
+  if (task !== '' && value !== '') {
+    // Salvar a tarefa no Firestore com os campos adicionais
+    tasksRef.add({ description: task, value: value })
+      .then(() => {
+        taskInput.value = '';
+        valueInput.value = '';
+        renderTasks(); // Atualiza a lista de tarefas na tela
+      })
+      .catch(error => {
+        console.error('Erro ao adicionar a tarefa:', error);
+      });
+  }
+}
 
     // Função para excluir uma tarefa
     function deleteTask(id) {
@@ -50,16 +59,26 @@ const firebaseConfig = {
   }
 }
 
-    function editTask(id, newDescription) {
-        // Atualizar a descrição da tarefa no Firestore
-        tasksRef.doc(id).update({ description: newDescription })
-          .then(() => {
-            renderTasks(); // Atualiza a lista de tarefas na tela
-          })
-          .catch(error => {
-            console.error('Erro ao editar a tarefa:', error);
-          });
-      }
+function editTask(id, newDescription, newValue) {
+  // Atualizar a descrição e o valor da tarefa no Firestore
+  tasksRef
+    .doc(id)
+    .update({ description: newDescription, value: newValue })
+    .then(() => {
+      renderTasks(); // Atualiza a lista de tarefas na tela
+    })
+    .catch(error => {
+      console.error('Erro ao editar a tarefa:', error);
+    });
+}
+
+function handleEditButtonClick(id, description, value) {
+  const newDescription = prompt('Digite a nova descrição da tarefa:', description);
+  const newValue = prompt('Digite o novo valor da tarefa:', value);
+  if (newDescription !== null && newDescription.trim() !== '') {
+    editTask(id, newDescription.trim(), newValue);
+  }
+}
 
     // Função para renderizar as tarefas na página
     function renderTasks() {
@@ -89,6 +108,9 @@ const firebaseConfig = {
             const taskText = document.createElement('span');
             taskText.textContent = task.description;
 
+            const valueText = document.createElement('span');
+            valueText.textContent = task.value;
+
             const deleteButton = document.createElement('button');
             deleteButton.innerHTML = `<i class="fa-solid fa-trash"></i>`;
             deleteButton.addEventListener('click', () => {
@@ -96,16 +118,14 @@ const firebaseConfig = {
             });
 
             const editButton = document.createElement("button");
-        editButton.innerHTML = `<i class="fa-solid fa-pencil"></i>`;
-        editButton.addEventListener("click", () => {
-          const newDescription = prompt('Digite a nova descrição da tarefa:', task.description);
-          if (newDescription !== null && newDescription.trim() !== '') {
-            editTask(id, newDescription.trim());
-          }
-        });
+editButton.innerHTML = `<i class="fa-solid fa-pencil"></i>`;
+editButton.addEventListener("click", () => {
+  handleEditButtonClick(id, task.description, task.value);
+});
 
             todoItem.appendChild(checkbox);
             todoItem.appendChild(taskText);
+            todoItem.appendChild(valueText);
             todoItem.appendChild(deleteButton);
             todoItem.appendChild(editButton);
 

@@ -23,12 +23,19 @@
       </header>
         <p>Adicionar uma venda</p>
         <div class="form-control">
-          <input
-            type="text"
-            id="taskInput"
-            placeholder="Cliente e Quantidade"
-          />
-          <button onclick="addTask()">Adicionar</button>
+          <form id="taskForm">
+            <input
+              type="text"
+              id="taskInput"
+              placeholder="Cliente"
+            />
+            <input
+              type="text"
+              id="valueInput"
+              placeholder="Quantidade"
+            />
+            <button type="submit">Adicionar</button>
+          </form>
         </div>
 
 
