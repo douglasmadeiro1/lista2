@@ -86,7 +86,7 @@ select {
 }
 
 .fixed-container {
-  max-width: 450px;
+  max-width: 600px;
   margin: 3rem auto 0;
   background-color: #fdfdfd;
   padding: 1.5rem;
