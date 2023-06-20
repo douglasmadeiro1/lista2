@@ -63,7 +63,7 @@ select {
         /* esssa é a altura das linhas, se vc quiser pode apaga-la caso não queira uma altura definida */
 
         /* espaço entre um elemento interno e outro */
-        grid-gap: 50px 50px;
+        grid-gap: 20px 20px;
         /* margem interna que afasta os elementos da borda do grid */
         padding: 50px 10px;
         border-bottom: 2px solid #696969;
@@ -86,7 +86,7 @@ select {
 }
 
 .fixed-container {
-  max-width: 600px;
+  max-width: 450px;
   margin: 3rem auto 0;
   background-color: #fdfdfd;
   padding: 1.5rem;
