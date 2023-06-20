@@ -76,9 +76,10 @@ select {
 
 /* Todo Header */
 .todo-container {
+  display: flex;
   max-width: 450px;
   margin: 3rem auto 0;
-  background-color: #fdfdfd;
+  background-color: #f11717;
   padding: 1.5rem;
   border-radius: 15px;
   position: relative;
@@ -117,7 +118,15 @@ select {
 }
 
 .form-control {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* espaço entre um elemento interno e outro */
+  grid-gap: 20px 20px;
+  /* margem interna que afasta os elementos da borda do grid */
+  padding: 10px 10px;
+  border-bottom: 2px solid #696969;
+  border-top: 2px solid #696969;
+
 }
 
 .form-control input {
@@ -184,7 +193,7 @@ select {
 }
 
 .completed {
-      background-color: lightgray;
+      background-color: #4291e0;
     }
 
 .todo button {
@@ -192,7 +201,7 @@ select {
 }
 
 .done {
-  background: #395169;
+  background: #16599c;
 }
 
 .done h3 {

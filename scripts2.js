@@ -118,14 +118,15 @@ function handleEditButtonClick(id, description, value) {
             });
 
             const editButton = document.createElement("button");
-editButton.innerHTML = `<i class="fa-solid fa-pencil"></i>`;
-editButton.addEventListener("click", () => {
-  handleEditButtonClick(id, task.description, task.value);
-});
+            editButton.innerHTML = `<i class="fa-solid fa-pencil"></i>`;
+            editButton.addEventListener("click", () => {
+            handleEditButtonClick(id, task.description, task.value);
+            });
 
-            todoItem.appendChild(checkbox);
+            
             todoItem.appendChild(taskText);
             todoItem.appendChild(valueText);
+            todoItem.appendChild(checkbox);
             todoItem.appendChild(deleteButton);
             todoItem.appendChild(editButton);
 
