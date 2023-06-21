@@ -122,14 +122,6 @@ select {
 
 .form-control {
   display: flex;
-  grid-template-columns: repeat(3, 1fr);
-  /* espaço entre um elemento interno e outro */
-  grid-gap: 20px 20px;
-  /* margem interna que afasta os elementos da borda do grid */
-  padding: 10px 10px;
-  border-bottom: 2px solid #696969;
-  border-top: 2px solid #696969;
-
 }
 
 .form-control input {
