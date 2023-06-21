@@ -10,8 +10,11 @@
 
 body {
   height: 100vh;
-  background-image: url("IMG_0295.jpeg");
-  background-size: cover;
+  background: linear-gradient(
+    90deg,
+    rgba(65, 184, 131, 1) 0%,
+    rgba(0, 212, 255, 1) 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
