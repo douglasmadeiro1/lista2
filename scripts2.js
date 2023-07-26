@@ -73,8 +73,8 @@ function editTask(id, newDescription, newValue) {
 }
 
 function handleEditButtonClick(id, description, value) {
-  const newDescription = prompt('Digite a nova descrição da tarefa:', description);
-  const newValue = prompt('Digite o novo valor da tarefa:', value);
+  const newDescription = prompt('Nome do cliente:', description);
+  const newValue = prompt('Valor:', value);
   if (newDescription !== null && newDescription.trim() !== '') {
     editTask(id, newDescription.trim(), newValue);
   }
