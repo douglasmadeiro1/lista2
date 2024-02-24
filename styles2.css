@@ -52,6 +52,9 @@ select {
 
 .taskList {
   display: fixed;
+  font-family: monospace;
+  white-space: pre;
+
 }
 
 .todo-item {
