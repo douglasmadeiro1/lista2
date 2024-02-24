@@ -1,4 +1,3 @@
-
 /* Geral */
 * {
   padding: 0;
@@ -36,7 +35,7 @@ button:hover {
   background-color: #102f5e;
 }
 
-button:hover > i {
+button:hover>i {
   color: #fff;
 }
 
@@ -52,23 +51,25 @@ select {
 }
 
 .taskList {
-        display: fixed;
-      }
+  display: fixed;
+}
 
-      .todo-item {
+.todo-item {
 
-        display: flex;
-        /* aqui eu determino é são 3 colunas de tamanhos iguas, cada coluna tem uma fração */
-        grid-template-columns: repeat(4, 1fr);
-        /* esssa é a altura das linhas, se vc quiser pode apaga-la caso não queira uma altura definida */
+  display: flex;
+  /* aqui eu determino é são 3 colunas de tamanhos iguas, cada coluna tem uma fração */
+  grid-template-columns: repeat(4, 1fr);
+  /* esssa é a altura das linhas, se vc quiser pode apaga-la caso não queira uma altura definida */
 
-        /* espaço entre um elemento interno e outro */
-        grid-gap: 20px 20px;
-        /* margem interna que afasta os elementos da borda do grid */
-        padding: 50px 10px;
-        border-bottom: 2px solid #696969;
-        border-top: 2px solid #696969;
-         }
+  /* espaço entre um elemento interno e outro */
+  grid-gap: 20px 20px;
+  /* margem interna que afasta os elementos da borda do grid */
+  padding: 50px 10px;
+  border-bottom: 2px solid #696969;
+  border-top: 2px solid #696969;
+  font-family: monospace;
+  white-space: pre;
+}
 
 .hide {
   display: none;
@@ -83,6 +84,8 @@ select {
   padding: 1.5rem;
   border-radius: 15px;
   position: relative;
+  font-family: monospace;
+  white-space: pre;
 
 }
 
@@ -193,8 +196,8 @@ select {
 }
 
 .completed {
-      background-color: #4291e0;
-    }
+  background-color: #4291e0;
+}
 
 .todo button {
   margin-left: 0.4rem;
